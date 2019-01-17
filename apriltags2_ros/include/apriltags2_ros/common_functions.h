@@ -57,7 +57,6 @@
 #include <eigen3/Eigen/Geometry>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include "opencv2/highgui/highgui.hpp"
 #include <opencv2/core/core.hpp>
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
@@ -213,7 +212,7 @@ class TagDetector
   // Detect tags in an image
   AprilTagDetectionArray detectTags(
       const cv_bridge::CvImagePtr& image,
-      const sensor_msgs::CameraInfoConstPtr& camera_info,bool& useCLAH);
+      const sensor_msgs::CameraInfoConstPtr& camera_info);
 
   // Get the pose of the tag in the camera frame
   // Returns homogeneous transformation matrix [R,t;[0 0 0 1]] which

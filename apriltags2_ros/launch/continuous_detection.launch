@@ -1,6 +1,5 @@
 <launch>
-  <arg name="launch_prefix" default="" /> 
-  <!-- set to value="gdbserver localhost:10000" for remote debugging -->
+  <arg name="launch_prefix" default="" /> <!-- set to value="gdbserver localhost:10000" for remote debugging -->
   <arg name="node_namespace" default="apriltags2_ros_continuous_node" />
   <arg name="camera_name" default="camera_array/cam0" />
   <arg name="camera_frame" default="cam_0_optical_frame" />
@@ -12,15 +11,15 @@
   
   <node pkg="apriltags2_ros" type="apriltags2_ros_continuous_node" name="$(arg node_namespace)" clear_params="true" output="screen" launch-prefix="$(arg launch_prefix)" >
     <!-- Remap topics from those used in code to those on the ROS network -->
-    <remap from="image_rect" to="/$(arg camera_name)/$(arg image_topic)" />
-    <remap from="camera_info" to="/$(arg camera_name)/camera_info" />
-    <remap from="tag_detections" to="/mithun/tag_detections" />
+    <remap from="image_rect" to="$(arg camera_name)/$(arg image_topic)" />
+    <remap from="camera_info" to="$(arg camera_name)/camera_info" />
 
     <param name="camera_frame" type="str" value="$(arg camera_frame)" />
     <param name="publish_tag_detections_image" type="bool" value="false" />      <!-- default: false -->
 
     <rosparam param="tag_descriptions">[
-      {id: 0, size: 0.22, frame_id: frame_0},
+      <!-- {id: 0, size: 0.028, frame_id: frame_0}] -->
+      {id: 0, size: 0.28, frame_id: frame_0},
       {id: 1, size: 0.074, frame_id: frame_1}]
     </rosparam>
   </node>

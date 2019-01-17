@@ -16,7 +16,13 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(Eigen REQUIRED)
 find_package(OpenCV REQUIRED)
-
+find_package(Boost REQUIRED)
+if(Boost_FOUND)
+  find_package ( Boost COMPONENTS filesystem system serialization REQUIRED )
+  set(Boost_GENERAL ${Boost_LIBRARIES})
+elseif(NOT Boost_FOUND)
+  message("Boost not found!")
+endif()
 # Set the build type.  Options are:
 #  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
 #  Debug          : w/ debug symbols, w/o optimization
@@ -69,6 +75,7 @@ include_directories(include
   ${catkin_INCLUDE_DIRS}
   ${Eigen_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIR}
 )
 
 add_library(common src/common_functions.cpp)
@@ -77,18 +84,21 @@ target_link_libraries(common
   ${catkin_LIBRARIES}
   ${Eigen_LIBRARIES}
   ${OpenCV_LIBRARIES}
+  ${Boost_GENERAL}
 )
 
 add_library(continuous_detector src/continuous_detector.cpp)
 target_link_libraries(continuous_detector
   common
   ${catkin_LIBRARIES}
+  ${Boost_GENERAL}
 )
 
 add_library(single_image_detector src/single_image_detector.cpp)
 target_link_libraries(single_image_detector
   common
   ${catkin_LIBRARIES}
+  ${Boost_GENERAL}
 )
 
 add_executable(${PROJECT_NAME}_continuous_node src/${PROJECT_NAME}_continuous_node.cpp)
@@ -96,6 +106,7 @@ add_dependencies(${PROJECT_NAME}_continuous_node ${PROJECT_NAME}_generate_messag
 target_link_libraries(${PROJECT_NAME}_continuous_node
   continuous_detector
   ${catkin_LIBRARIES}
+  ${Boost_GENERAL}
 )
 
 add_executable(${PROJECT_NAME}_single_image_server_node src/${PROJECT_NAME}_single_image_server_node.cpp)
@@ -103,6 +114,7 @@ add_dependencies(${PROJECT_NAME}_single_image_server_node ${PROJECT_NAME}_genera
 target_link_libraries(${PROJECT_NAME}_single_image_server_node
   single_image_detector
   ${catkin_LIBRARIES}
+  ${Boost_GENERAL}
 )
 
 add_executable(${PROJECT_NAME}_single_image_client_node src/${PROJECT_NAME}_single_image_client_node.cpp)
@@ -110,4 +122,5 @@ add_dependencies(${PROJECT_NAME}_single_image_client_node ${PROJECT_NAME}_genera
 target_link_libraries(${PROJECT_NAME}_single_image_client_node
   common
   ${catkin_LIBRARIES}
+  ${Boost_GENERAL}
 )

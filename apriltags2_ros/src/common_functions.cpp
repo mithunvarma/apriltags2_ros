@@ -95,6 +95,7 @@ TagDetector::TagDetector(ros::NodeHandle pnh) :
                        e.getMessage().c_str());
     }
   }
+
   // Define the tag family whose tags should be searched for in the camera
   // images
   if (family_ == "tag36h11")
@@ -176,30 +177,16 @@ TagDetector::~TagDetector() {
 
 AprilTagDetectionArray TagDetector::detectTags (
     const cv_bridge::CvImagePtr& image,
-    const sensor_msgs::CameraInfoConstPtr& camera_info,bool& useCLAH) {
+    const sensor_msgs::CameraInfoConstPtr& camera_info) {
   // Convert image to AprilTag code's format
   cv::Mat gray_image;
   cv::cvtColor(image->image, gray_image, CV_BGR2GRAY);
-  
-  //clahe conversion for different lighting conditions
-  cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE();
-  clahe->setClipLimit(4);
+  image_u8_t apriltags2_image = { .width = gray_image.cols,
+                                  .height = gray_image.rows,
+                                  .stride = gray_image.cols,
+                                  .buf = gray_image.data
+  };
 
-  cv::Mat cv_image_eq_;
-  clahe->apply(gray_image,cv_image_eq_);
-  //cv::imshow("modified",cv_image_eq_);
-  //cv::imshow("original",gray_image);
-  //cv::waitKey(3);
-  cv::Mat gray_image1;
-
-  if(useCLAH) gray_image1 =cv_image_eq_.clone();
-  else gray_image1 =gray_image.clone();
-
-  image_u8_t apriltags2_image = {.width = gray_image1.cols,
-                      .height = gray_image1.rows,
-                      .stride = gray_image1.cols,
-                      .buf = gray_image1.data
-   };
   // Get camera intrinsic properties
   double fx = camera_info->K[0]; // focal length in camera x-direction [px]
   double fy = camera_info->K[4]; // focal length in camera y-direction [px]

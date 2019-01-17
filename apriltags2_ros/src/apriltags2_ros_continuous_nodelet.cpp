@@ -27,45 +27,17 @@
  * those of the authors and should not be interpreted as representing official
  * policies, either expressed or implied, of the California Institute of
  * Technology.
- *
- ** single_image_detector.h ****************************************************
- *
- * Wrapper class of TagDetector class which calls TagDetector::detectTags on a
- * an image stored at a specified load path and stores the output at a specified
- * save path.
- *
- * $Revision: 1.0 $
- * $Date: 2017/12/17 13:33:40 $
- * $Author: dmalyuta $
- *
- * Originator:        Danylo Malyuta, JPL
- ******************************************************************************/
+ */
 
-#ifndef APRILTAGS2_ROS_SINGLE_IMAGE_DETECTOR_H
-#define APRILTAGS2_ROS_SINGLE_IMAGE_DETECTOR_H
+#include "apriltags2_ros/continuous_detector_nodelet.h"
 
-#include "apriltags2_ros/common_functions.h"
-#include <apriltags2_ros/AnalyzeSingleImage.h>
-
-namespace apriltags2_ros
+void apriltags2_ros::ContinuousDetectorNodelet::onInit()
 {
-
-class SingleImageDetector
-{
- private:
-  TagDetector tag_detector_;
-  ros::ServiceServer single_image_analysis_service_;
-
-  ros::Publisher tag_detections_publisher_;
-  
- public:
-  SingleImageDetector(ros::NodeHandle& nh, ros::NodeHandle& pnh);
-
-  // The function which provides the single image analysis service
-  bool analyzeImage(apriltags2_ros::AnalyzeSingleImage::Request& request,
-                     apriltags2_ros::AnalyzeSingleImage::Response& response);
-};
-
-} // namespace apriltags2_ros
-
-#endif // APRILTAGS2_ROS_SINGLE_IMAGE_DETECTOR_H
+    NODELET_INFO("Initializing nodelet");
+    ros::NodeHandle& node = getNodeHandle();
+    ros::NodeHandle& private_nh = getPrivateNodeHandle();
+    ROS_INFO_STREAM(" inside nodelet");
+    inst_.reset(new ContinuousDetector());
+    inst_->init_ros(node, private_nh);
+}
+PLUGINLIB_EXPORT_CLASS(apriltags2_ros::ContinuousDetectorNodelet, nodelet::Nodelet)
