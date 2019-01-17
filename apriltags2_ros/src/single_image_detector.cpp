@@ -48,6 +48,7 @@ SingleImageDetector::SingleImageDetector (ros::NodeHandle& nh,
   tag_detections_publisher_ =
       nh.advertise<AprilTagDetectionArray>("tag_detections", 1);
   ROS_INFO_STREAM("Ready to do tag detection on single images");
+  ROS_ASSERT(pnh.getParam("useCLAHFlag", useCLAHFlag_));
 }
 
 bool SingleImageDetector::analyzeImage(
@@ -78,7 +79,7 @@ bool SingleImageDetector::analyzeImage(
   loaded_image->header.frame_id = "camera";
   response.tag_detections =
       tag_detector_.detectTags(loaded_image,sensor_msgs::CameraInfoConstPtr(
-          new sensor_msgs::CameraInfo(request.camera_info)));
+          new sensor_msgs::CameraInfo(request.camera_info)),useCLAHFlag_);
 
   // Publish detected tags (AprilTagDetectionArray, basically an array of
   // geometry_msgs/PoseWithCovarianceStamped)

@@ -29,22 +29,16 @@
  * Technology.
  */
 
-#include <ros/ros.h>
-
-#include <nodelet/loader.h>
+#include "apriltags2_ros/continuous_detector.h"
 
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "apriltags2_ros");
 
-  nodelet::Loader nodelet;
-  nodelet::M_string remap(ros::names::getRemappings());
-  nodelet::V_string nargv;
-
-  nodelet.load(ros::this_node::getName(),
-              "apriltags2_ros/ContinuousDetector",
-              remap, nargv);
+  ros::NodeHandle nh;
+  ros::NodeHandle pnh("~");
+  
+  apriltags2_ros::ContinuousDetector continuous_tag_detector(nh, pnh);
 
   ros::spin();
-  return 0;
 }

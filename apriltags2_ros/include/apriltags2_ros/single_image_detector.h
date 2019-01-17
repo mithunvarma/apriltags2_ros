@@ -57,7 +57,7 @@ class SingleImageDetector
   ros::ServiceServer single_image_analysis_service_;
 
   ros::Publisher tag_detections_publisher_;
-  
+  bool useCLAHFlag_;
  public:
   SingleImageDetector(ros::NodeHandle& nh, ros::NodeHandle& pnh);
 
